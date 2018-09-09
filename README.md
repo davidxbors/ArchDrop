@@ -29,6 +29,6 @@ The client side sends the data you want to the server script running on the dest
 
 Each instance has a list with friend devices, so it will be easier to send data to them. 
 
-The list consists in their \<ip / mac (not sure yet>:<port>
+The list consists in their \<ip / mac (not sure yet>:\<port>
 
 [dol][#dol]
