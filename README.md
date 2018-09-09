@@ -31,4 +31,4 @@ Each instance has a list with friend devices, so it will be easier to send data 
 
 The list consists in their \<ip / mac (not sure yet>:\<port>
 
-[dol][#dol]
+[dol]: #dol
