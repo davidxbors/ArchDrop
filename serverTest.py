@@ -20,7 +20,7 @@ def server(port):
 		conn, addr = s.accept()
 		os.system("clear")
 #		print("{}:{} connected to the server...".format(addr[0], addr[1]))
-		acc = str(input("{}:{} wants to send you a file...[y/n]".format(addr[0], addr[1])))
+		acc = str(input("{}:{} wants to send you a file...[y/n]"))
 		if acc == "n":
 			conn.close()
 		elif acc == "y":
@@ -34,5 +34,5 @@ def server(port):
 			conn.close()
 		else:
 			print("Option not supported, connection refused...")
-			conn.close()
 
+server(12346)

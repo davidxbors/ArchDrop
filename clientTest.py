@@ -19,8 +19,6 @@ def addNewDev():
 	dct = {"name": name, "addr": addr}
 	devs.append(dct)
 	saveDevsList()
-	main()
-	exit(0)
 
 def connDev(addr):
 	print("Started connection protocol...")
@@ -57,7 +55,7 @@ def main():
 	readDevsList()
 	i = 1
 	
-	os.system("clear")
+	#os.system("clear")
 	if devs:
 		for dev in devs:
 			print("[{}] {} {}".format(i, dev["name"], dev["addr"]))
@@ -69,8 +67,6 @@ def main():
 
 	if int(opt) == i:
 		addNewDev()
-	elif int(opt) == -1:
-		pass
 	elif int(opt) < i and int(opt) >=1:
 		connDev(devs[int(opt)-1]["addr"])
 	elif int(opt) == i + 1:
@@ -97,12 +93,8 @@ class serverThread(threading.Thread):
 
 
 if __name__ == "__main__":
-	tmp = str(input("Do you want to send or recieve a file? [s/r]"))
-	if tmp == "s":
-		main()
-	elif tmp == "r":
-		_server.server(12347)
-	else:
-		print("Option not existent... Exiting...")
-		exit(0)
-	
+	main1 = mainThread()
+	server1 = serverThread(12348)
+
+	main1.start()
+	server1.start()
