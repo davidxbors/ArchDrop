@@ -1,1 +1,5 @@
 ./downloads/*
+*.pdf
+*.png
+*.jpg
+*.txt
