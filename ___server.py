@@ -11,8 +11,7 @@ def pick_fn(n, e):
 			i = i + 1
 	return fn
 
-def printStatus(fn, already):
-	global size
+def printStatus(fn, already, size):
 	fn = os.path.basename(fn)
 	os.system("clear")
 	procent = int(already)/int(size) * 100
@@ -28,37 +27,42 @@ def printStatus(fn, already):
 
 	print(prompt)
 
-s = socket.socket()
-s.bind(("localhost", 13347))
-
-s.listen(5)
-
-print("Server listenin'...")
-
-while True:
-	conn, addr = s.accept()
-
-	metadata = str(conn.recv(4096))
-	print(metadata)
-	if metadata != "b''":
-		metadata = metadata.split("'")[1]
+def server(port):	
+	s = socket.socket()
+	s.bind(("localhost", port))
 	
-		name, ext, size = metadata.split(" ")[0], metadata.split(" ")[1], metadata.split(" ")[2]
-		
-		fn = pick_fn(name, ext)
-		f = open(fn, "wb")
-		
-		alr = 0	
-		tmp_get = conn.recv(DATA_BUFFER)
-		while tmp_get:
-			printStatus(fn, alr)
-			f.write(tmp_get)
-			alr += DATA_BUFFER
-			tmp_get = conn.recv(DATA_BUFFER)
-		printStatus(fn, size)
+	s.listen(5)
 	
-		f.close()
-	conn.close()
+	#print("Server listenin'...")
+	
+	while True:
+		conn, addr = s.accept()
+	
+		metadata = str(conn.recv(4096))
+		if metadata != "b''":
+			tmp = input("Accept files from {}:{}?[y/n] ".format(addr[0],addr[1]))
+			if tmp == "y":
+				metadata = metadata.split("'")[1]
+			
+				name, ext, size = metadata.split(" ")[0], metadata.split(" ")[1], metadata.split(" ")[2]
+				
+				fn = pick_fn(name, ext)
+				f = open(fn, "wb")
+				
+				alr = 0	
+				tmp_get = conn.recv(DATA_BUFFER)
+				while tmp_get:
+					printStatus(fn, alr, size)
+					f.write(tmp_get)
+					alr += DATA_BUFFER
+					tmp_get = conn.recv(DATA_BUFFER)
+				printStatus(fn, size, size)
+			
+				f.close()
+			else:
+				pass
+		conn.close()
+	
+	s.close()
 
-s.close()
-	
+#server(13347)		
