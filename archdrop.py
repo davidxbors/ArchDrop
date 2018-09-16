@@ -90,7 +90,8 @@ def connDev(addr):
 				alr += DATA_BUFFER
 				tmp_read = f.read(DATA_BUFFER)
 			printStatus(fn, size, size)
-			
+			input("Press any key to continue...")			
+
 			s.close()
 		except:
 			print("There was a connection problem...")

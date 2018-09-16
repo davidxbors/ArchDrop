@@ -28,8 +28,13 @@ def printStatus(fn, already, size):
 	print(prompt)
 
 def server(port):	
+	es = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+	es.connect(("8.8.8.8", 80))
+	host = str(es.getsockname()[0])
+	es.close()
+	
 	s = socket.socket()
-	s.bind(("127.0.1.1", port))
+	s.bind((host, port))
 	
 	s.listen(5)
 	
