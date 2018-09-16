@@ -36,29 +36,37 @@ def server(port):
 	#print("Server listenin'...")
 	
 	while True:
+		listen = input()
+		if listen == 'q':
+			exit(0)
 		conn, addr = s.accept()
 	
 		metadata = str(conn.recv(4096))
 		if metadata != "b''":
 			tmp = input("Accept files from {}:{}?[y/n] ".format(addr[0],addr[1]))
 			if tmp == "y":
-				metadata = metadata.split("'")[1]
-			
-				name, ext, size = metadata.split(" ")[0], metadata.split(" ")[1], metadata.split(" ")[2]
+				try:
+					metadata = metadata.split("'")[1]
 				
-				fn = pick_fn(name, ext)
-				f = open(fn, "wb")
-				
-				alr = 0	
-				tmp_get = conn.recv(DATA_BUFFER)
-				while tmp_get:
-					printStatus(fn, alr, size)
-					f.write(tmp_get)
-					alr += DATA_BUFFER
+					name, ext, size = metadata.split(" ")[0], metadata.split(" ")[1], metadata.split(" ")[2]
+					
+					fn = pick_fn(name, ext)
+					f = open(fn, "wb")
+					
+					alr = 0	
 					tmp_get = conn.recv(DATA_BUFFER)
-				printStatus(fn, size, size)
-			
-				f.close()
+					while tmp_get:
+						printStatus(fn, alr, size)
+						f.write(tmp_get)
+						alr += DATA_BUFFER
+						tmp_get = conn.recv(DATA_BUFFER)
+					printStatus(fn, size, size)
+				
+					f.close()
+				except e:
+					print(e)
+					tmp = input("Something went wrong... Press any key to continue...")
+					pass
 			else:
 				pass
 		conn.close()

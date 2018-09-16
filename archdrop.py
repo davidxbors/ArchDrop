@@ -44,8 +44,14 @@ def connDev(addr):
 	print("Connection protocol started...")
 	
 	s = socket.socket()
-	
-	host, port = addr.split(':')[0], addr.split(':')[1]
+
+	try:	
+		host, port = addr.split(':')[0], addr.split(':')[1]
+	except:
+		print("Device not recognised... Try adding it again..")
+		input("Press any key to continue...")
+		main()
+		exit(0)
 	
 	try:
 		s.connect((host, int(port)))
@@ -58,24 +64,31 @@ def connDev(addr):
 	fn = str(input("What file you want to open?"))
 	
 	if(os.path.exists(fn)):
-		name, ext, size = os.path.basename(fn).split(".")[0], os.path.basename(fn).split(".")[1], os.path.getsize(fn)
-		print(name, ext, size)
-	
-		# send basic data to the server
-		s.send(str.encode("{} {} {}".format(name, ext, size)))
+		try:
+			name, ext, size = os.path.basename(fn).split(".")[0], os.path.basename(fn).split(".")[1], os.path.getsize(fn)
+			print(name, ext, size)
 		
-		# open the file
-		f = open(fn, "rb")
-		tmp_read = f.read(DATA_BUFFER)
-		alr = 0
-		while(tmp_read):
-			printStatus(fn, alr, size)
-			s.send(tmp_read)
-			alr += DATA_BUFFER
+			# send basic data to the server
+			s.send(str.encode("{} {} {}".format(name, ext, size)))
+			
+			# open the file
+			f = open(fn, "rb")
 			tmp_read = f.read(DATA_BUFFER)
-		printStatus(fn, size, size)
-		
-		s.close()
+			alr = 0
+			while(tmp_read):
+				printStatus(fn, alr, size)
+				s.send(tmp_read)
+				alr += DATA_BUFFER
+				tmp_read = f.read(DATA_BUFFER)
+			printStatus(fn, size, size)
+			
+			s.close()
+		except e:
+			print(e)
+			print("There was a connection problem...")
+			input("Press any key to continue...")
+			main()
+			exit(0)
 	else:
 		print("Failed... File doesn't exist...")
 		exit(0)
