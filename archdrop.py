@@ -70,6 +70,15 @@ def connDev(addr):
 		
 			# send basic data to the server
 			s.send(str.encode("{} {} {}".format(name, ext, size)))
+
+			ack = str(s.recv(4096))
+			if ack.split("'")[1] == "BOO":
+				print("Connection not accepted...")
+				input("Press any key to continue...")
+				main()
+				exit(0)
+			else:
+				pass
 			
 			# open the file
 			f = open(fn, "rb")
@@ -83,12 +92,11 @@ def connDev(addr):
 			printStatus(fn, size, size)
 			
 			s.close()
-		except e:
-			print(e)
+		except:
 			print("There was a connection problem...")
 			input("Press any key to continue...")
-			main()
-			exit(0)
+		main()
+		exit(0)
 	else:
 		print("Failed... File doesn't exist...")
 		exit(0)
